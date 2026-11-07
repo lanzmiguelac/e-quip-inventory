@@ -1,3 +1,9 @@
+import { AccessRequestPage } from "./features/auth/AccessRequestPage";
+import { Login } from "./features/auth/Login";
+import {
+  oauthErrorMessage,
+  restoreOAuthRoute,
+} from "./features/auth/googleAuth";
 import {
   Suspense,
   lazy,
@@ -5,7 +11,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type FormEvent,
 } from "react";
 import type { Session } from "@supabase/supabase-js";
 import {
@@ -23,11 +28,9 @@ import {
   Menu,
   RefreshCw,
   GraduationCap,
-  Eye,
-  EyeOff,
   ChevronRight,
 } from "lucide-react";
-import { configured, supabase, loadData } from "./lib/supabase";
+import { supabase, loadData } from "./lib/supabase";
 import { AppContext } from "./lib/context";
 import { ROLE_NAMES, type Data, type Profile } from "./lib/types";
 import { formatDate } from "./lib/rules";
@@ -97,9 +100,10 @@ export default function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [checking, setChecking] = useState(true);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [unapproved, setUnapproved] = useState(false);
   const [data, setData] = useState<Data>(empty);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(() => oauthErrorMessage(location.href));
   const [path, setPath] = useState(
     location.hash.replace(/^#\/?/, "") || "dashboard",
   );
@@ -111,6 +115,7 @@ export default function App() {
     void supabase.auth.getSession().then(({ data, error }) => {
       if (alive) {
         setSession(data.session);
+        if (data.session) restoreOAuthRoute();
         setChecking(false);
         if (error) setError(error.message);
       }
@@ -145,19 +150,29 @@ export default function App() {
       .from("profiles")
       .select("*")
       .eq("id", session.user.id)
-      .single();
+      .maybeSingle();
     if (error)
       throw new Error(
-        "Your account profile could not be loaded. Contact the administrator.",
+        "Your account could not be loaded. Check your connection and try again.",
       );
     if (!current()) return;
+    if (!p) {
+      setUnapproved(true);
+      setProfile(null);
+      setData(empty);
+      setSynced(null);
+      setError("");
+      return;
+    }
     if (!p.is_active) {
+      setUnapproved(false);
       setProfile(p as Profile);
       setData(empty);
       throw new Error("This account is inactive. Contact the administrator.");
     }
     const next = await loadData(p as Profile);
     if (!current()) return;
+    setUnapproved(false);
     setProfile(p as Profile);
     setData(next);
     setSynced(new Date().toISOString());
@@ -165,6 +180,7 @@ export default function App() {
   }, [session?.user.id]);
   useEffect(() => {
     if (!session) {
+      setUnapproved(false);
       setProfile(null);
       setData(empty);
       setSynced(null);
@@ -172,6 +188,7 @@ export default function App() {
     }
     let alive = true;
     setProfile(null);
+    setUnapproved(false);
     setData(empty);
     setSynced(null);
     setLoading(true);
@@ -233,6 +250,16 @@ export default function App() {
       </div>
     );
   if (!session) return <Login initialError={error} />;
+  if (unapproved && !loading)
+    return (
+      <AccessRequestPage
+        key={session.user.id}
+        email={session.user.email || ""}
+        defaultName={String(session.user.user_metadata?.full_name || "")}
+        onRefresh={refresh}
+        onSignOut={signOut}
+      />
+    );
   if (!profile || !profile.is_active || (!synced && loading))
     return (
       <div className="app-loading">
@@ -354,7 +381,6 @@ export default function App() {
             <small>School Equipment Management</small>
           </span>
         </a>
-        <p className="nav-title">WORKSPACE</p>
         <nav aria-label="Main navigation">
           {allowed.map(({ id: page, label, icon: Icon }) => (
             <a
@@ -375,7 +401,7 @@ export default function App() {
           <div className="school-label">
             <GraduationCap size={19} />
             <div>
-              <strong>School demonstration</strong>
+              <strong>ICCT Colleges</strong>
               <small>Philippine Time · UTC+8</small>
             </div>
           </div>
@@ -451,18 +477,12 @@ export default function App() {
               </button>
             </div>
           )}
-          <div className="demo-notice">
-            <span className="live-dot" />
-            Shared school demonstration · Use fictional records only
-            <span>All dates in Philippine Time</span>
-          </div>
           <Suspense
             fallback={<section className="card">Loading page…</section>}
           >
             {content}
           </Suspense>
           <footer>
-            E-QUIP · School Equipment Borrowing & Inventory
             <span>
               {synced ? `Updated ${formatDate(synced, true)} PHT` : ""}
             </span>
@@ -476,134 +496,4 @@ export default function App() {
       )}
     </AppContext.Provider>
   );
-}
-function Login({ initialError }: { initialError: string }) {
-  const [error, setError] = useState(initialError);
-  const [busy, setBusy] = useState(false);
-  const [visible, setVisible] = useState(false);
-  async function submit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setBusy(true);
-    setError("");
-    const f = new FormData(e.currentTarget);
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: String(f.get("email")).trim(),
-        password: String(f.get("password")),
-      });
-      if (error) throw error;
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-  return (
-    <div className="login-page">
-      <div className="login-intro">
-        <a className="brand" href="#/dashboard">
-          <span className="brand-icon">
-            <Package size={30} />
-          </span>
-          <span>
-            <strong>E-QUIP</strong>
-            <small>School Equipment Management</small>
-          </span>
-        </a>
-        <div>
-          <span className="eyebrow">EVERY ASSET. ACCOUNTED FOR.</span>
-          <h1>
-            The right equipment.
-            <br />
-            In the right hands.
-          </h1>
-          <p>
-            A simpler way to manage school equipment,
-            <br />
-            from the first request to the final return.
-          </p>
-          <div className="login-features">
-            <span>
-              <Package size={18} />
-              Centralized inventory
-            </span>
-            <span>
-              <ClipboardList size={18} />
-              Organized borrowing
-            </span>
-            <span>
-              <Wrench size={18} />
-              Reliable maintenance
-            </span>
-          </div>
-        </div>
-        <small>School project demonstration · Philippine Time (UTC+8)</small>
-      </div>
-      <div className="login-panel">
-        <div className="login-card">
-          <div className="login-symbol">
-            <GraduationCap size={31} />
-          </div>
-          <h2>Welcome to E-QUIP</h2>
-          <p>Sign in to your school equipment workspace.</p>
-          <form onSubmit={submit}>
-            <label className="field">
-              <span>Email address</span>
-              <input
-                name="email"
-                type="email"
-                autoComplete="username"
-                required
-                placeholder="you@school.edu.ph"
-              />
-            </label>
-            <label className="field">
-              <span>Password</span>
-              <div className="password-input">
-                <input
-                  name="password"
-                  type={visible ? "text" : "password"}
-                  autoComplete="current-password"
-                  required
-                  placeholder="Enter your password"
-                />
-                <button
-                  type="button"
-                  aria-label={visible ? "Hide password" : "Show password"}
-                  onClick={() => setVisible(!visible)}
-                >
-                  {visible ? <EyeOff size={19} /> : <Eye size={19} />}
-                </button>
-              </div>
-            </label>
-            {(!configured || error) && (
-              <p role="alert" className="error">
-                {!configured
-                  ? "Supabase is not configured. Follow the setup guide."
-                  : error}
-              </p>
-            )}
-            <button
-              className="button full-width"
-              disabled={busy || !configured}
-            >
-              {busy ? "Signing in…" : "Sign in"}
-              <ChevronRight size={17} />
-            </button>
-          </form>
-          <p className="login-help">
-            Need an account or a password reset?
-            <br />
-            Contact your E-QUIP administrator.
-          </p>
-          <div className="login-timezone">
-            <ClockLabel />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-function ClockLabel() {
-  return <>Asia/Manila · Philippine Time</>;
 }

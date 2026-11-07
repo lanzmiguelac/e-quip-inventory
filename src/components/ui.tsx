@@ -25,7 +25,7 @@ export function Empty({
     <div className="empty">
       <Package size={30} />
       <h3>{title}</h3>
-      <p>{children || "Records will appear here when you add them."}</p>
+      {children && <p>{children}</p>}
     </div>
   );
 }
@@ -35,14 +35,14 @@ export function Heading({
   children,
 }: {
   title: string;
-  description: string;
+  description?: string;
   children?: ReactNode;
 }) {
   return (
     <div className="page-heading">
       <div>
         <h1>{title}</h1>
-        <p>{description}</p>
+        {description && <p>{description}</p>}
       </div>
       <div className="actions">{children}</div>
     </div>

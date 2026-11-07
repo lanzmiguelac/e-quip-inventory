@@ -106,3 +106,21 @@ export const CATEGORIES = [
   "Others",
 ];
 export const CONDITIONS: Condition[] = ["Good", "Fair", "Needs Repair"];
+
+export interface AccessRequest {
+  id: string;
+  user_id: string;
+  email: string;
+  full_name: string;
+  school_id: string;
+  reason: string;
+  status: "Pending" | "Approved" | "Declined";
+  requested_at: string;
+  reviewed_at: string | null;
+  reviewer_id: string | null;
+  decision_note: string;
+}
+export interface AccessRequestStatus {
+  eligible: boolean;
+  request: AccessRequest | null;
+}

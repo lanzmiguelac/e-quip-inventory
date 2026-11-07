@@ -259,13 +259,9 @@ fieldset {
   margin-top: 3px;
   letter-spacing: 0.15px;
 }
-.nav-title {
-  font-size: 9px;
-  letter-spacing: 1.7px;
-  color: #90abc0;
-  margin: 40px 13px 14px;
-}
+
 .sidebar nav {
+  margin-top: 28px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -414,25 +410,7 @@ fieldset {
   margin: auto;
   outline: none;
 }
-.demo-notice {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 10px;
-  color: var(--muted);
-  margin-bottom: 28px;
-}
-.demo-notice > span:last-child {
-  margin-left: auto;
-  font-size: 9px;
-}
-.live-dot {
-  width: 5px;
-  height: 5px;
-  display: inline-block;
-  border-radius: 50%;
-  background: #448d7a;
-}
+
 .page-heading {
   display: flex;
   align-items: center;
@@ -452,40 +430,7 @@ fieldset {
   padding: 22px;
   box-shadow: 0 3px 12px #123b5d03;
 }
-.welcome {
-  background: linear-gradient(112deg, #123b5d, #286b98);
-  color: white;
-  border-radius: 13px;
-  padding: 28px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 23px;
-  overflow: hidden;
-  position: relative;
-}
-.welcome h2 {
-  color: white;
-  font-size: 25px;
-  letter-spacing: -0.7px;
-  margin: 9px 0;
-}
-.welcome p {
-  color: #d3e4f0;
-  font-size: 12px;
-  margin-bottom: 0;
-}
-.eyebrow {
-  font-size: 8px;
-  font-weight: 650;
-  letter-spacing: 2px;
-  color: #b1d2e9;
-}
-.welcome-mark {
-  color: #c3e0f250;
-  transform: rotate(-10deg);
-  padding-right: 16px;
-}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -615,6 +560,7 @@ tbody tr:hover {
 .badge.maintenance,
 .badge.overdue,
 .badge.rejected,
+.badge.declined,
 .badge.inactive,
 .badge.under-repair {
   background: #fcecee;
@@ -992,8 +938,24 @@ dialog .form-grid .field {
 .qr-label small {
   font-size: 9px;
 }
+.scanner-stage {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+  margin: 22px 0;
+  overflow: hidden;
+  border-radius: 9px;
+  background: #101c28;
+}
+/* The camera library measures this element before inserting its video. */
+.scanner {
+  display: block;
+  width: 100%;
+  min-height: 240px;
+}
 .scanner-placeholder {
-  height: 200px;
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1002,17 +964,17 @@ dialog .form-grid .field {
   border: 1px dashed #c1d1df;
   border-radius: 9px;
   color: #7893a8;
-  margin: 22px 0;
+  margin: 0;
 }
 .scanner-placeholder p {
   font-size: 11px;
   margin-top: 14px;
 }
-.scanner:empty {
-  display: none;
-}
 .scanner video {
-  border-radius: 10px;
+  width: 100% !important;
+  max-width: 100%;
+  height: auto;
+  border-radius: 9px;
 }
 .lookup {
   display: flex;
@@ -1206,9 +1168,7 @@ footer {
   .content {
     padding-top: 28px;
   }
-  .welcome {
-    padding: 35px;
-  }
+
   .stats {
     gap: 22px;
   }
@@ -1310,13 +1270,7 @@ footer {
   .content {
     padding: 18px 16px;
   }
-  .demo-notice {
-    font-size: 9px;
-    margin-bottom: 23px;
-  }
-  .demo-notice > span:last-child {
-    display: none;
-  }
+
   .page-heading {
     flex-direction: column;
     gap: 14px;
@@ -1325,15 +1279,7 @@ footer {
   h1 {
     font-size: 23px;
   }
-  .welcome {
-    padding: 24px 20px;
-  }
-  .welcome h2 {
-    font-size: 22px;
-  }
-  .welcome-mark {
-    display: none;
-  }
+
   .stats {
     gap: 11px;
   }
@@ -1566,7 +1512,6 @@ footer {
   }
   .sidebar,
   .topbar,
-  .demo-notice,
   .page-heading,
   footer,
   .qr-layout > .card:nth-child(2),

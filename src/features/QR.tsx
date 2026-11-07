@@ -80,7 +80,13 @@ export function QRPage({ equipmentId }: { equipmentId?: string }) {
       scanner.current = s;
       await s.start(
         { facingMode: "environment" },
-        { fps: 10, qrbox: 220 },
+        {
+          fps: 10,
+          qrbox: (width, height) => {
+            const size = Math.floor(Math.min(width, height, 320) * 0.7);
+            return { width: size, height: size };
+          },
+        },
         (text) => openResult(text),
         () => {},
       );
@@ -89,11 +95,41 @@ export function QRPage({ equipmentId }: { equipmentId?: string }) {
         return;
       }
       setScanning(true);
-    } catch {
-      if (alive.current)
-        setError(
-          "Camera could not start. Allow camera access or use an image or asset number below.",
-        );
+    } catch (error) {
+      if (alive.current) {
+        const details =
+          error instanceof Error
+            ? `${error.name}: ${error.message}`
+            : String(error);
+        if (
+          /NotAllowedError|PermissionDeniedError|permission denied/i.test(
+            details,
+          )
+        )
+          setError(
+            "Camera permission was denied. Allow camera access for this site and try again. If you are viewing the embedded page, open E-QUIP in a new browser tab.",
+          );
+        else if (/NotFoundError|DevicesNotFoundError/i.test(details))
+          setError(
+            "No camera was found. Connect a camera or scan a saved QR image.",
+          );
+        else if (
+          /NotReadableError|TrackStartError|Could not start video source/i.test(
+            details,
+          )
+        )
+          setError(
+            "The camera is unavailable or in use by another app. Close other camera apps and try again.",
+          );
+        else if (/not supported|secure context|https/i.test(details))
+          setError(
+            "Camera access is unavailable here. Open E-QUIP in a browser tab over HTTPS.",
+          );
+        else
+          setError(
+            "Camera could not start. Check camera access and try again, or scan a saved QR image.",
+          );
+      }
     } finally {
       if (alive.current) setBusy(false);
     }
@@ -192,13 +228,19 @@ export function QRPage({ equipmentId }: { equipmentId?: string }) {
             Open a record using your camera, a saved QR image, or an asset
             number.
           </p>
-          <div id="camera-scanner" className="scanner" />
-          {!scanning && !busy && (
-            <div className="scanner-placeholder">
-              <Camera size={42} />
-              <p>Point your camera at an E-QUIP label</p>
-            </div>
-          )}
+          <div className="scanner-stage">
+            <div id="camera-scanner" className="scanner" />
+            {!scanning && (
+              <div className="scanner-placeholder">
+                <Camera size={42} />
+                <p>
+                  {busy
+                    ? "Please wait…"
+                    : "Point your camera at an E-QUIP label"}
+                </p>
+              </div>
+            )}
+          </div>
           <div className="actions">
             <button
               className="button"

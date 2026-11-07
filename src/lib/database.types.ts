@@ -14,6 +14,56 @@ export type Database = {
   };
   public: {
     Tables: {
+      access_requests: {
+        Row: {
+          decision_note: string;
+          email: string;
+          full_name: string;
+          id: string;
+          reason: string;
+          requested_at: string;
+          reviewed_at: string | null;
+          reviewer_id: string | null;
+          school_id: string;
+          status: string;
+          user_id: string;
+        };
+        Insert: {
+          decision_note?: string;
+          email: string;
+          full_name: string;
+          id?: string;
+          reason?: string;
+          requested_at?: string;
+          reviewed_at?: string | null;
+          reviewer_id?: string | null;
+          school_id: string;
+          status?: string;
+          user_id: string;
+        };
+        Update: {
+          decision_note?: string;
+          email?: string;
+          full_name?: string;
+          id?: string;
+          reason?: string;
+          requested_at?: string;
+          reviewed_at?: string | null;
+          reviewer_id?: string | null;
+          school_id?: string;
+          status?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "access_requests_reviewer_id_fkey";
+            columns: ["reviewer_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       audit_logs: {
         Row: {
           action: string;
@@ -383,12 +433,14 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      access_request_status: { Args: never; Returns: Json };
       archive_equipment: { Args: { p_id: string }; Returns: undefined };
       decide_request: {
         Args: { p_decision: string; p_id: string; p_reason?: string };
         Returns: undefined;
       };
       equipment_catalog: { Args: never; Returns: Json };
+      list_access_requests: { Args: never; Returns: Json };
       manage_profile: {
         Args: { p_active: boolean; p_id: string; p_role: string };
         Returns: undefined;
@@ -424,9 +476,17 @@ export type Database = {
         };
         Returns: undefined;
       };
+      review_access_request: {
+        Args: { p_decision: string; p_id: string; p_note?: string };
+        Returns: undefined;
+      };
       save_equipment: { Args: { p_data: Json; p_id: string }; Returns: string };
       school_today: { Args: never; Returns: string };
       start_repair: { Args: { p_id: string }; Returns: undefined };
+      submit_access_request: {
+        Args: { p_full_name: string; p_reason?: string; p_school_id: string };
+        Returns: string;
+      };
       submit_request: {
         Args: {
           p_due: string;

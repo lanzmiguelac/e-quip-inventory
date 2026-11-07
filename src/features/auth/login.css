@@ -1,0 +1,404 @@
+.icct-login {
+  background: #fff;
+}
+.icct-login .login-intro {
+  padding: 44px clamp(30px, 5vw, 86px);
+  background: linear-gradient(145deg, #102f50 0%, #15476e 65%, #1a587d 100%);
+  position: relative;
+  overflow: hidden;
+}
+.icct-login .login-intro::after {
+  content: "";
+  width: 420px;
+  height: 420px;
+  position: absolute;
+  right: -245px;
+  bottom: -200px;
+  border: 1px solid #ffffff12;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 75px #ffffff03,
+    0 0 0 150px #ffffff02;
+  pointer-events: none;
+}
+.icct-login .brand small {
+  letter-spacing: 2px;
+  font-size: 8px;
+  font-weight: 600;
+  margin-top: 5px;
+}
+.icct-login .brand-icon {
+  width: 46px;
+  height: 46px;
+  background: #ffffff0b;
+}
+.icct-login .login-story {
+  padding: 60px 0;
+}
+
+.icct-login .login-intro h2 {
+  font-size: clamp(34px, 3.8vw, 56px);
+  line-height: 1.17;
+  letter-spacing: -2px;
+  color: white;
+  margin: 22px 0;
+}
+
+.school-project {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  border-top: 1px solid #ffffff18;
+  margin-top: 46px;
+  padding-top: 24px;
+  color: #b9d3e5;
+}
+
+.login-intro-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 10px;
+  color: #8fb2ce;
+  position: relative;
+  z-index: 1;
+}
+.login-intro-footer a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #c0d7e7;
+}
+.login-intro-footer a:hover {
+  text-decoration: underline;
+}
+.icct-login .login-panel {
+  background: #fcfdff;
+  padding: 48px 36px;
+}
+.icct-login .login-card {
+  max-width: 375px;
+}
+.icct-login .login-symbol {
+  height: 55px;
+  width: 55px;
+  border: 1px solid #dce8f1;
+  border-radius: 14px;
+  background: #edf4f9;
+  margin-bottom: 25px;
+}
+
+.icct-login .login-card h1 {
+  font-size: 29px;
+  letter-spacing: -1.1px;
+  margin: 11px 0 9px;
+  color: #123b5d;
+}
+.icct-login .login-card > p {
+  font-size: 12px;
+  color: #75899a;
+  margin-bottom: 0;
+}
+.google-signin {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  border: 1px solid #d7e1e9;
+  border-radius: 9px;
+  background: #fff;
+  min-height: 48px;
+  color: #2f4253;
+  font-size: 13px;
+  font-weight: 550;
+  margin-top: 29px;
+  box-shadow: 0 1px 2px #123b5d04;
+}
+.google-signin:hover {
+  background: #f6f9fc;
+  border-color: #b3c8d8;
+}
+.google-signin:active {
+  background: #eff4f8;
+}
+.google-signin svg {
+  flex-shrink: 0;
+}
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 10px;
+  color: #98a7b4;
+  margin: 24px 0;
+}
+.login-divider:before,
+.login-divider:after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: #e4ebf1;
+}
+.icct-login .login-card form {
+  margin-top: 0;
+}
+.icct-login .login-card .field {
+  margin: 18px 0;
+  font-size: 11px;
+  color: #425a6e;
+}
+.icct-login .login-card input {
+  padding: 12px 13px;
+  border-radius: 8px;
+  border-color: #dbe4ec;
+  background: white;
+  font-size: 12px;
+  color: #233e53;
+}
+.icct-login .login-card input::placeholder {
+  color: #a0aebb;
+}
+.icct-login .password-input input {
+  padding-right: 43px;
+}
+.icct-login .login-card .button {
+  height: 45px;
+  border-radius: 8px;
+  background: #123b5d;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.icct-login .login-card .button:hover {
+  background: #1e5f8f;
+}
+.icct-login .login-card > .error {
+  font-size: 11px;
+  line-height: 1.6;
+  margin-top: 17px;
+}
+.approved-access {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 22px;
+  color: #7c92a4;
+}
+.approved-access svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.approved-access p {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.7;
+}
+.icct-login .login-card .login-help {
+  font-size: 10px;
+  margin: 20px 0 25px;
+  line-height: 1.9;
+  color: #8b9caa;
+}
+.icct-login .login-timezone {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  color: #94a4b2;
+  font-size: 9px;
+}
+@media (max-width: 760px) {
+  .icct-login .login-intro {
+    padding: 22px 25px;
+    min-height: 0;
+  }
+  .icct-login .login-story,
+  .icct-login .login-intro-footer {
+    display: none;
+  }
+  .icct-login .login-panel {
+    padding: 33px 25px;
+  }
+  .icct-login .login-symbol {
+    display: none;
+  }
+  .icct-login .login-card h1 {
+    font-size: 27px;
+  }
+  .icct-login .login-card input {
+    font-size: 16px;
+  }
+
+  .icct-login .login-card {
+    max-width: 410px;
+  }
+  .google-signin {
+    min-height: 49px;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .icct-login {
+    background: #111d29;
+  }
+  .icct-login .login-panel {
+    background: #111d29;
+  }
+  .icct-login .login-symbol {
+    background: #20394e;
+    border-color: #324b60;
+  }
+  .icct-login .login-card h1 {
+    color: #c0ddf1;
+  }
+  .icct-login .login-card input {
+    background: #192a3a;
+    color: #d4e0eb;
+    border-color: #3b5064;
+  }
+  .icct-login .login-card .field {
+    color: #b0c6d8;
+  }
+  .icct-login .login-card > p {
+    color: #92a8bb;
+  }
+  .google-signin {
+    background: #fff;
+    color: #2f4253;
+  }
+  .login-divider:before,
+  .login-divider:after {
+    background: #304254;
+  }
+  .icct-login .login-timezone {
+    border-color: #304254;
+  }
+  .icct-login .login-card .button {
+    background: #23638f;
+  }
+}
+.icct-login .school-project {
+  gap: 8px;
+}
+.icct-login .school-wordmark {
+  width: 185px;
+  height: auto;
+  margin-left: -35px;
+  flex-shrink: 0;
+}
+.access-page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 30px 20px;
+  background: var(--bg);
+}
+.access-card {
+  width: 100%;
+  max-width: 470px;
+  padding: 30px;
+}
+.access-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--blue);
+  margin-bottom: 28px;
+}
+.access-brand strong {
+  display: block;
+  font-family: Manrope, sans-serif;
+  font-size: 19px;
+  color: var(--navy);
+}
+.access-brand small {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+}
+.access-card h1 {
+  font-size: 24px;
+}
+.access-email {
+  font-size: 12px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.access-status {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--light);
+  border-radius: 9px;
+  padding: 15px;
+  margin: 22px 0;
+  color: var(--blue);
+}
+.access-status strong {
+  font-size: 12px;
+  display: block;
+}
+.access-status small {
+  display: block;
+  font-size: 10px;
+  margin-top: 7px;
+}
+.access-details {
+  font-size: 12px;
+  margin: 20px 0;
+}
+.access-details > div {
+  display: flex;
+  gap: 15px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+}
+.access-details dt {
+  color: var(--muted);
+  min-width: 70px;
+}
+.access-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.access-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 22px;
+}
+.decision-note {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 15px;
+  font-size: 12px;
+}
+.decision-note p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 8px 0;
+}
+.access-requests-card {
+  margin-bottom: 22px;
+}
+.access-requests-card .section-heading {
+  margin-bottom: 18px;
+}
+.access-requests-card .section-heading select {
+  width: auto;
+  max-width: 160px;
+}
+.access-requests-card h2 {
+  margin: 0;
+}
+.access-count {
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.access-card input,
+.access-card textarea {
+  font-size: 16px;
+}

@@ -1,3 +1,4 @@
+import { AccessRequests } from "./users/AccessRequests";
 import { useState } from "react";
 import {
   Plus,
@@ -437,7 +438,7 @@ export function Reports() {
     <>
       <Heading
         title="Reports"
-        description="Export database records for your presentation and school records."
+        description="Export inventory, borrowing, maintenance, and overdue records."
       />
       <section className="card report-filter">
         <div>
@@ -543,19 +544,27 @@ export function Reports() {
 export function UsersPage() {
   const { data, profile, perform } = useApp();
   const [adding, setAdding] = useState(false);
+  const [approvingGoogle, setApprovingGoogle] = useState(false);
   const [editing, setEditing] = useState<Profile | null>(null);
   const [reset, setReset] = useState<Profile | null>(null);
   return (
     <>
       <Heading
         title="User Management"
-        description="Manage demonstration accounts and access permissions."
+        description="Manage accounts and permissions."
       >
+        <button
+          className="button secondary"
+          onClick={() => setApprovingGoogle(true)}
+        >
+          Approve Google account
+        </button>
         <button className="button" onClick={() => setAdding(true)}>
           <Plus size={17} />
           Add user
         </button>
       </Heading>
+      <AccessRequests />
       <section className="card">
         <Table headers={["User", "School ID", "Role", "Status", "Actions"]}>
           {data.profiles.map((p) => (
@@ -589,6 +598,49 @@ export function UsersPage() {
           ))}
         </Table>
       </section>
+      {approvingGoogle && (
+        <Dialog
+          title="Approve a Google account"
+          onClose={() => setApprovingGoogle(false)}
+          submit="Approve Google account"
+          onSubmit={async (f) => {
+            await perform(
+              () =>
+                manageUser({
+                  action: "approve_google",
+                  email: value(f, "email"),
+                  full_name: value(f, "name"),
+                  school_id: value(f, "school"),
+                }),
+              "Google account approved",
+            );
+          }}
+        >
+          <p>
+            Approve the exact email address the student or staff member uses
+            with Google. New accounts start as borrowers.
+          </p>
+          <Field label="Google email address">
+            <input
+              name="email"
+              type="email"
+              required
+              maxLength={254}
+              placeholder="student@gmail.com"
+            />
+          </Field>
+          <Field label="Full name">
+            <input name="name" required maxLength={120} />
+          </Field>
+          <Field label="School ID">
+            <input name="school" maxLength={80} />
+          </Field>
+          <p className="form-note">
+            No password is needed. The owner verifies their email through
+            Google. Use Manage afterward if they need inventory staff access.
+          </p>
+        </Dialog>
+      )}
       {adding && (
         <Dialog
           title="Create account"
@@ -633,8 +685,7 @@ export function UsersPage() {
             </Field>
           </div>
           <p className="form-note">
-            Give the account details directly to the intended demonstration
-            user.
+            Give the account details directly to the user.
           </p>
         </Dialog>
       )}
@@ -721,7 +772,7 @@ export function Settings() {
     <>
       <Heading
         title="System Settings"
-        description="Configuration for the E-QUIP school demonstration."
+        description="Borrowing rules and account settings."
       />
       <section className="card form-card">
         <h2>
@@ -734,7 +785,6 @@ export function Settings() {
             ["Reservation policy", "Approval reserves the asset immediately"],
             ["Overdue policy", "After the due date ends in Philippine Time"],
             ["Notifications", "In-app updates"],
-            ["Database", "Supabase PostgreSQL"],
           ].map(([k, v]) => (
             <div key={k}>
               <span className="muted">{k}</span>
@@ -743,12 +793,11 @@ export function Settings() {
           ))}
         </div>
         <p className="form-note">
-          These are the agreed demonstration policies. Account permissions are
-          managed under User Management.
+          Manage roles and account access in User Management.
         </p>
         <a
           className="button secondary"
-          href="/downloads/E-QUIP-source.zip"
+          href="https://github.com/lanzmiguelac/e-quip-inventory/archive/refs/heads/main.zip"
           download
         >
           <Download size={16} />

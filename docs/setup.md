@@ -41,7 +41,7 @@ DOM tests do not replace visual browser checks or camera checks on an actual pho
 
 Run `npm run build` and host `dist/` on an HTTPS static host. Routes use hashes (for example `/#/equipment/<id>`), so QR links and refreshes work without special server rewrites. QR labels use the domain at generation time; regenerate them if the application's domain changes.
 
-The existing `.openai/hosting.json` identifies the prepared private Sites application. Do not reuse that ID when creating a separate hosted copy. A separate copy should use its own hosting configuration.
+The GitHub repository uses vercel.json for the connected Vercel deployment. See docs/vercel-deployment.md for environment variables and Google redirect configuration. The earlier Sites copy is maintained separately.
 
 Never put service-role keys, account passwords, or database credentials in VITE_ variables. They would be included in browser JavaScript.
 

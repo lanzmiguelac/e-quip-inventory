@@ -148,7 +148,7 @@ export function Inventory() {
     <>
       <Heading
         title="Equipment Inventory"
-        description="One place for every asset, location, and condition."
+        description="Equipment, locations, and availability."
       >
         {staff && (
           <button className="button" onClick={() => setAdding(true)}>

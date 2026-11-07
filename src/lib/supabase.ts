@@ -1,11 +1,15 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Data, Profile } from "./types";
-const url = import.meta.env.VITE_SUPABASE_URL;
-const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+export const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const url = supabaseUrl;
+export const supabasePublishableKey = import.meta.env
+  .VITE_SUPABASE_PUBLISHABLE_KEY;
+const key = supabasePublishableKey;
 export const configured = Boolean(url && key);
 export const supabase = createClient(
   url || "https://unconfigured.supabase.co",
   key || "unconfigured",
+  { auth: { flowType: "pkce", detectSessionInUrl: true } },
 );
 export async function rpc<T = unknown>(
   name: string,

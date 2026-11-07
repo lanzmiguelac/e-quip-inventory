@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+work/
+*.tsbuildinfo
+public/downloads/*.zip
+
+supabase/.temp/
+
+.vercel/

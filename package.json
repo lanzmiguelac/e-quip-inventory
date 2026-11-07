@@ -8,9 +8,10 @@
     "build": "tsc -b && vite build",
     "test": "vitest run",
     "test:integration": "node --env-file=.env tests/integration.mjs",
-    "test:unit": "vitest run tests/rules.test.ts",
+    "test:unit": "vitest run tests/rules.test.ts tests/google-auth.test.ts tests/login.test.tsx tests/qr-camera.test.tsx tests/access-request-ui.test.tsx tests/admin-access-requests.test.tsx",
     "test:accounts": "node --env-file=.env tests/admin-api.mjs",
-    "test:storage": "node --env-file=.env tests/storage.mjs"
+    "test:storage": "node --env-file=.env tests/storage.mjs",
+    "test:google": "node --env-file=.env tests/google-approval.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.119.0",
